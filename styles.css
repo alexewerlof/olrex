@@ -1,0 +1,27 @@
+.regexp-error {
+    color: red;
+}
+ol {
+    counter-reset: o-counter -1;
+    list-style-type: none;
+}
+ol li:before {
+    content: '[' counter(o-counter) '] = ';
+    counter-increment: o-counter;
+}
+.result {
+    margin: 13px 0;
+}
+/* color highlighting for various types */
+.type-string {
+    color:darkgoldenrod;
+}
+.type-regexp {
+    color:forestgreen;
+}
+.type-boolean {
+    color: darkgreen;
+}
+.type-number {
+    color: blueviolet;
+}

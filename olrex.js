@@ -1,87 +1,71 @@
-/** Copyright (C) 2013 Alex Hanif */
+require([ 'knockout' ], function ( ko ) {
 
-//**writes a log on javascript console (works only if console.log() is available
-function log ( msg ) {
-    if ( "log" in console ) {
-        console.log( msg );
+    //** quote a string (and replace all new lines with \n)
+    function quote ( str ) {
+        return '"' + str.replace( /\n/g, '\\n' ) + '"';
     }
-}
 
-//** returns the result of an operation in string format. if it is null, it returns "null". if it is boolean, it returns "true" or "false". if it is an array it returns all the elements
-function result ( res ) {
-    switch ( typeof res ) {
-        case 'boolean':
-            return 'boolean: ' + res;
-        case 'number':
-            return 'number: ' + res.toString();
-        case 'string':
-            return 'string: "' + res + '"';
-        case 'object':
-            if ( res === null ) {
-                //result is null
-                return 'null';
-            } else if ( 'length' in res ) {
-                //result is an array
-                var ret = 'Array[' + res.length + ']: [ ';
-                for ( var i = 0 ; i < res.length ; i++ ) {
-                    ret += '"' + res[i] + '"';
-                    if ( i < res.length - 1 ) {
-                        ret += ', ';
-                    }
-                }
-                ret += ' ]';
-                return ret;
-            } else {
-                return 'A non-array non-null object';
+    //** quote all elements of an array
+    function quoteArr ( arr ) {
+        if ( arr ) {
+            var ret = [];
+            for ( var i = 0; i < arr.length; i++ ) {
+                ret.push( quote( arr[i] ) );
             }
-        default:
-            return 'Unexpected result type: ' + typeof res;
+            return ret;
+        } else {
+            return arr;
+        }
     }
-}
 
-//** updates the copies of regexp and string text in the page
-function updateCopies () {
-    var regexp = $( "#regexp-txt" ).val();
-    var string = $( "#string-txt" ).val();
-    $( '.regexp-copy' ).text( regexp );
-    $( '.string-copy' ).text( '"' + string + '"' );
-    //parse the string to see if it is useful as a regular expression
-    var r = regexp.match( "^\/(.+?)\/([mig])*$" );
-    if ( r === null ) {
-        $( '#regexp-txt' ).addClass( 'error' );
-        $( '.results' ).empty();
-        log( 'Could not parse the regular expression' );
-        return;
-    } else {
-        $( '#regexp-txt' ).removeClass( 'error' );
-        log( 'regular expression parsed to: ' + r );
+    function ViewModel ( initialStr, initialRegexp, initialReplaceStr, initialGFlag, initialIFlag, initialMFlag ) {
+        var self = this;
+        self.str = ko.observable( initialStr );
+        self.strQ = ko.computed( function () {
+            return quote( self.str() );
+        });
+        self.regexpStr = ko.observable( initialRegexp );
+        self.gFlag = ko.observable( initialGFlag );
+        self.iFlag = ko.observable( initialIFlag );
+        self.mFlag = ko.observable( initialMFlag );
+        self.replaceStr = ko.observable( initialReplaceStr );
+        self.replaceStrQ = ko.computed( function () {
+            return quote( self.replaceStr() );
+        });
+        self.error = ko.observable( '' );
+        self.regexp = ko.computed( function () {
+            var ret = null;
+            try {
+                self.error( '' );
+                var flags = '';
+                if ( self.gFlag() ) { flags += 'g'; }
+                if ( self.iFlag() ) { flags += 'i'; }
+                if ( self.mFlag() ) { flags += 'm'; }
+                ret = new RegExp( self.regexpStr(), flags );
+            } catch ( ex ) {
+                self.error( ex );
+            }
+            return ret;
+        });
+        self.replaceResult = ko.computed( function () {
+            return self.regexp() ? quote( self.str().replace( self.regexp(), self.replaceStr() ) ) : '';
+        });
+        self.matchResult = ko.computed( function () {
+            return self.regexp() ? quoteArr( self.str().match( self.regexp() ) ) : '';
+        });
+        self.execResult = ko.computed( function () {
+            return self.regexp() ? quoteArr( self.regexp().exec( self.str() ) ) : '';
+        });
+        self.testResult = ko.computed( function () {
+            return self.regexp() ? self.regexp().test( self.str() ) : '';
+        });
+        self.searchResult = ko.computed( function () {
+            return self.regexp() ? self.str().search( self.regexp() ) : '';
+        });
+        self.splitResult = ko.computed( function () {
+            return self.regexp() ? quoteArr( self.str().split( self.regexp() ) ) : '';
+        });
     }
-    if ( r[2] === null ) {
-        var rex = new RegExp( r[1] );
-    } else {
-        var rex = new RegExp( r[1], r[2] );
-    }
-    if ( rex === null ) {
-        $( '#regexp-txt' ).addClass( 'error' );
-        $( '.results' ).empty();
-        return;
-    } else {
-        $( '#regexp-txt' ).removeClass( 'error' );
-    }
-    log( 'regular expression source: ' + rex.source );
-    $( '#test-result' ).text( result( rex.test( string ) ) );
-    $( '#match-result' ).text( result( string.match( rex ) ) );
-    $( '#exec-result' ).text( result( rex.exec( string ) ) );
-    $( '#search-result' ).text( result( string.search( rex ) ) );
-    $( '.replace-str-copy' ).text( $( '#replace-str-txt' ).val() );
-    $( '#replace-result' ).text( result( string.replace( rex, $( '#replace-str-txt' ).val() ) ) );
-    $( '#split-result' ).text( result( string.split( rex ) ) );
-}
 
-//** runs when the document is loaded and ready
-$( document ).ready( function ( e ) {
-    updateCopies();
-    $( '#regexp-txt' ).change( updateCopies ).keyup( updateCopies );
-    $( '#string-txt' ).change( updateCopies ).keyup( updateCopies );
-    $( '#replace-str-txt' ).change( updateCopies ).keyup( updateCopies );
+    ko.applyBindings( new ViewModel( 'orange, apple, banana', ",", ' and', true, true, false ) );
 });
