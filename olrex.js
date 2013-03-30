@@ -48,22 +48,22 @@ require([ 'knockout' ], function ( ko ) {
             return ret;
         });
         self.replaceResult = ko.computed( function () {
-            return self.regexp() ? quote( self.str().replace( self.regexp(), self.replaceStr() ) ) : '';
+            return self.regexp() ? quote( self.str().replace( self.regexp(), self.replaceStr() ) ) : null;
         });
         self.matchResult = ko.computed( function () {
-            return self.regexp() ? quoteArr( self.str().match( self.regexp() ) ) : '';
+            return self.regexp() ? quoteArr( self.str().match( self.regexp() ) ) : null;
         });
         self.execResult = ko.computed( function () {
-            return self.regexp() ? quoteArr( self.regexp().exec( self.str() ) ) : '';
+            return self.regexp() ? quoteArr( self.regexp().exec( self.str() ) ) : null;
         });
         self.testResult = ko.computed( function () {
-            return self.regexp() ? self.regexp().test( self.str() ) : '';
+            return self.regexp() ? self.regexp().test( self.str() ) : null;
         });
         self.searchResult = ko.computed( function () {
-            return self.regexp() ? self.str().search( self.regexp() ) : '';
+            return self.regexp() ? self.str().search( self.regexp() ) : null;
         });
         self.splitResult = ko.computed( function () {
-            return self.regexp() ? quoteArr( self.str().split( self.regexp() ) ) : '';
+            return self.regexp() ? quoteArr( self.str().split( self.regexp() ) ) : null;
         });
     }
 

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <title>OLREX - Online Live Regular Expression Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.css" />
     <link rel="stylesheet" href="styles.css" />
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
@@ -10,99 +11,582 @@
 </head>
 <body>
 <div data-role="page" id="main-page">
-    <div data-theme="a" data-role="header">
+    <div data-theme="b" data-role="header">
         <h3>OLREX</h3>
     </div>
 
     <div data-role="content">
-        <input name="" id="regexp-txt" type="text" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
-        <div class="regexp-error" data-bind="text: error"></div>
+        <ul data-role="listview" data-divider-theme="b" data-inset="true">
+            <li data-theme="c"><a href="#match-page" data-transition="slide">match()</a></li>
+            <li data-theme="c"><a href="#replace-page" data-transition="slide">replace()</a></li>
+            <li data-theme="c"><a href="#exec-page" data-transition="slide">exec()</a></li>
+            <li data-theme="c"><a href="#search-page" data-transition="slide">search()</a></li>
+            <li data-theme="c"><a href="#test-page" data-transition="slide">test()</a></li>
+            <li data-theme="c"><a href="#split-page" data-transition="slide">split()</a></li>
+        </ul>
+        <div data-theme="d" data-role="footer" data-position="fixed">
+            <h3>copyright &copy; 2013 <a href="http://www.userpixel.com">userpixel</a></h3>
+        </div>
+    </div>
+</div>
+<div data-role="page" id="match-page">
+    <div data-theme="b" data-role="header">
+        <a href="#main-page" data-transition="fade" data-theme="" data-icon="home">Home</a>
+        <h3>match()</h3>
+        <a data-role="button" href="#settings-page" data-transition="fade" data-theme="" data-icon="gear">Settings</a>
+    </div>
+    <div data-role="content">
+
+        <input type="text" placeholder="Regular Expression" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
+        <textarea cols="40" rows="8" placeholder="String" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+
+        <code>
+            <div class="call-syntax">
+                <span class="type-string" data-bind="text: strQ"></span>.match( <span class="type-regexp" data-bind="text: regexp"></span> );
+            </div>
+            <ol class="result" start="0" data-bind="foreach: matchResult">
+                <li class="type-string" data-bind="text: $data"></li>
+            </ol>
+            <div class="regexp-error" data-bind="text: error"></div>
+        </code>
+
+        <div data-role="collapsible" data-content-theme="d">
+            <h3>Reference</h3>
+            <h4>Summary</h4>
+            <p>Used to retrieve the matches when matching a string against a regular expression. (Implemented in
+                JavaScript 1.2, ECMAScript Edition ECMAScript 3rd Edition)</p>
+            <h4>Syntax</h4>
+            <code>var array = string.match( regexp );</code>
+            <h5>regexp:</h5>
+            <p>A regular expression object. If a non-RegExp object obj is passed, it is implicitly converted to a
+                RegExp by using new RegExp(obj).</p>
+            <h4>Description</h4>
+            <p>If the regular expression does not include the g flag, it returns the same result as regexp.exec(string).</p>
+            <p>If the regular expression includes the g flag, the method returns an Array containing all matches. If there were no matches, the method returns null.</p>
+            <p>The returned Array has an extra input property, which contains the regexp that generated it as a result. In addition, it has an index property, which represents the zero-based index of the match in the string.</p>
+            <p>If you need to know if a string matches a regular expression regexp, use Regexp <a href="#test-page">test</a> method.</p>
+            <p>If you only want the first match found, you might want to use Regexp <a href="#exec-page">exec</a> method instead.</p>
+        </div>
+
+        <div data-theme="d" data-role="footer" data-position="fixed">
+            <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+        </div>
+    </div>
+</div>
+
+<div data-role="page" id="replace-page">
+    <div data-theme="b" data-role="header">
+        <a href="#main-page" data-transition="fade" data-theme="" data-icon="home">Home</a>
+        <h3>replace()</h3>
+        <a data-role="button" href="#settings-page" data-transition="fade" data-theme="" data-icon="gear">Settings</a>
+    </div>
+    <div data-role="content">
+
+        <input type="text" placeholder="Regular Expression" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
+        <textarea cols="40" rows="8" placeholder="String" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+        <textarea placeholder="Replace With" data-bind="value: replaceStr, valueUpdate: 'keyup'"></textarea>
+
+        <code>
+            <div class="call-syntax">
+                <span class="type-string" data-bind="text: strQ"></span>.replace( <span class="type-regexp" data-bind="text: regexp"></span>, <span class="type-string" data-bind="text: replaceStrQ"></span> );
+            </div>
+            <div class="type-string result" data-bind="text: replaceResult"></div>
+            <div class="regexp-error" data-bind="text: error"></div>
+        </code>
+
+        <div data-role="collapsible" data-content-theme="d">
+            <h3>Reference</h3>
+            <h4>Summary</h4>
+            <p>Returns a new string with some or all matches of a pattern replaced by a replacement.
+                The pattern can be a string or a RegExp, and the replacement can be a string or a function to be called
+                for each match. (Implemented in JavaScript 1.2, ECMAScript Edition ECMAScript 3rd Edition)
+            </p>
+            <h4>Syntax</h4>
+            <code>newstring = str.replace( regexp, replaceString );</code>
+            <h5>regexp:</h5>
+            <p>A RegExp object. The match is replaced by the return value of the second parameter.</p>
+            <h4>replaceString</h4>
+            <p>The String that replaces the substring received from the first parameter. A number of special replacement
+                patterns are supported:</p>
+            <ul>
+                <li><code>$$</code> Inserts a "$"</li>
+                <li><code>$&</code> Inserts the matched substring</li>
+                <li><code>$`</code> Inserts the portion of the string that precedes the matched substring</li>
+                <li><code>$'</code> Inserts the portion of the string that follows the matched substring</li>
+                <li><code>$n or $nn</code> Where n or nn are decimal digits, inserts the nth parenthesized submatch string, provided the first argument was a RegExp object</li>
+            </ul>
+            <h4>Description</h4>
+            <p>This method does not change the String object it is called on. It simply returns a new string.</p>
+            <p>To perform a global search and replace, include the <a href="#settings-page"><code>g</code> flag</a> in the regular expression.</p>
+
+            <h4>Note</h4>
+            <p>It is possible to pass a string as the first parameter and/or a function as the second parameter. It is
+                also possible to set a non-standard <code>flag</code> parameter. These behaviors are not supported in this app. For more information please see
+                <a target="_blank" href="https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/String/replace">Mozilla Documentation</a>.</p>
+
+        </div>
+
+    </div>
+
+    <div data-theme="d" data-role="footer" data-position="fixed">
+        <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+    </div>
+</div>
+
+<div data-role="page" id="exec-page">
+    <div data-theme="b" data-role="header">
+        <a href="#main-page" data-transition="fade" data-theme="" data-icon="home">Home</a>
+        <h3>exec()</h3>
+        <a data-role="button" href="#settings-page" data-transition="fade" data-theme="" data-icon="gear">Settings</a>
+    </div>
+
+    <div data-role="content">
+
+        <input type="text" placeholder="Regular Expression" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
+        <textarea cols="40" rows="8" placeholder="String" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+
+        <code>
+            <div class="call-syntax">
+                <span class="type-regexp" data-bind="text: regexp"></span>.exec( <span class="type-string" data-bind="text: strQ"></span> );
+            </div>
+            <ol class="result" start="0" data-bind="foreach: execResult">
+                <li class="type-string" data-bind="text: $data"></li>
+            </ol>
+            <div class="regexp-error" data-bind="text: error"></div>
+        </code>
+
+        <div data-role="collapsible" data-content-theme="d">
+            <h3>Reference</h3>
+            <h4>Summary</h4>
+            <p>Executes a search for a match in a specified string. Returns a result array, or null.
+                (Implemented in JavaScript 1.2, ECMAScript Edition ECMAScript 3rd Edition)</p>
+            <h4>Syntax</h4>
+            <code>var result = regexp.exec(str)</code>
+            <h5>regexp:</h5>
+            <p>The regular expression. In the code it can be a variable name or a regular expression literal.</p>
+            <h5>str:</h5>
+            <p>The string against which to match the regular expression.</p>
+            <h5>Return value</h5>
+            <p>If the match succeeds, the exec method returns an array and updates properties of the regular expression object.
+                The returned array has the matched text as the first item, and then one item for each capturing parenthesis
+                that matched containing the text that was captured.</p>
+            <p>If the match fails, the exec method returns <code>null</code>.</p>
+            <p>If you are executing a match simply to find true or false, use the RegExp <a href="#test-page">test</a> method
+                or the String <a href="#search-page">search</a> method.</p>
+            <h4>Description</h4>
+            <p>If your regular expression uses the <a href="#settings-page"><code>g</code> flag</a>, you can use the exec method multiple times to find successive
+                matches in the same string. When you do so, the search starts at the substring of str specified by the
+                regular expression's lastIndex property (test will also advance the lastIndex property).</p>
+        </div>
+
+    </div>
+
+    <div data-theme="d" data-role="footer" data-position="fixed">
+        <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+    </div>
+</div>
+
+<div data-role="page" id="search-page">
+    <div data-theme="b" data-role="header">
+        <a href="#main-page" data-transition="fade" data-theme="" data-icon="home">Home</a>
+        <h3>search()</h3>
+        <a data-role="button" href="#settings-page" data-transition="fade" data-theme="" data-icon="gear">Settings</a>
+    </div>
+
+    <div data-role="content">
+
+        <input type="text" placeholder="Regular Expression" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
+        <textarea cols="40" rows="8" placeholder="String" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+
+        <code>
+            <div class="call-syntax">
+                <span class="type-regexp" data-bind="text: regexp"></span>.search( <span class="type-string" data-bind="text: strQ"></span> );
+            </div>
+            <div class="type-number result" data-bind="text: searchResult"></div>
+            <div class="regexp-error" data-bind="text: error"></div>
+        </code>
+
+        <div data-role="collapsible" data-content-theme="d">
+            <h3>Reference</h3>
+            <h4>Summary</h4>
+            <p>Executes the search for a match between a regular expression and this String object.
+                (Implemented in JavaScript 1.2, ECMAScript Edition ECMAScript 3rd Edition)</p>
+            <h4>Syntax</h4>
+            <code>var result = string.search( regexp );</code>
+            <h5>regexp</h5>
+            <p>A regular expression object. In the code if a non-RegExp object obj is passed, it is implicitly converted to a RegExp
+                by using new RegExp(obj).</p>
+            <h5>Description</h5>
+            <p>If successful, search returns the index of the regular expression inside the string. Otherwise, it returns <code>-1</code>.</p>
+            <p>When you want to know whether a pattern is found in a string use search (similar to the regular expression
+                <a href="#test-page">test</a> method); for more information (but slower execution) use
+                <a href="#match-page">match</a> (similar to the regular expression
+                <a href="#exec-page">exec</a> method).</p>
+        </div>
+
+    </div>
+
+    <div data-theme="d" data-role="footer" data-position="fixed">
+        <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+    </div>
+</div>
+
+<div data-role="page" id="test-page">
+    <div data-theme="b" data-role="header">
+        <a href="#main-page" data-transition="fade" data-theme="" data-icon="home">Home</a>
+        <h3>test()</h3>
+        <a data-role="button" href="#settings-page" data-transition="fade" data-theme="" data-icon="gear">Settings</a>
+    </div>
+
+    <div data-role="content">
+
+        <input type="text" placeholder="Regular Expression" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
+        <textarea cols="40" rows="8" placeholder="String" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+
+        <code>
+            <div class="call-syntax">
+                <span class="type-regexp" data-bind="text: regexp"></span>.test( <span class="type-string" data-bind="text: strQ"></span> );
+            </div>
+            <div class="type-boolean result" data-bind="text: testResult"></div>
+            <div class="regexp-error" data-bind="text: error"></div>
+        </code>
+
+        <div data-role="collapsible" data-content-theme="d">
+            <h3>Reference</h3>
+            <h4>Summary</h4>
+            <p>Executes the search for a match between a regular expression and a specified string. Returns true or false.
+                (Implemented in JavaScript 1.2, ECMAScript Edition ECMAScript 3rd Edition).</p>
+            <h4>Syntax</h4>
+            <code>var result = regexp.test( str );</code>
+            <h5>regexp</h5>
+            The name of the regular expression. It can be a variable name or a literal.
+            <h5>str</h5>
+            <p>The string against which to match the regular expression.</p>
+            <h4>Description</h4>
+            <p>When you want to know whether a pattern is found in a string use the test method (similar to the String
+                <a href="#search-page">search</a> method); for more information (but slower execution) use the
+                <a href="#exec-page">exec</a> method (similar to the String
+                <a href="#match-page">match</a> method). As with exec (or in combination with it), test called multiple
+                times on the same global regular expression instance will advance past the previous match.</p>
+        </div>
+
+    </div>
+
+    <div data-theme="d" data-role="footer" data-position="fixed">
+        <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+    </div>
+</div>
+
+<div data-role="page" id="split-page">
+    <div data-theme="b" data-role="header">
+        <a href="#main-page" data-transition="fade" data-theme="" data-icon="home">Home</a>
+        <h3>split()</h3>
+        <a data-role="button" href="#settings-page" data-transition="fade" data-theme="" data-icon="gear">Settings</a>
+    </div>
+
+    <div data-role="content">
+
+        <input type="text" placeholder="Regular Expression" data-bind="value: regexpStr, valueUpdate: 'keyup'" />
+        <textarea cols="40" rows="8" placeholder="String" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+
+        <code>
+            <div class="call-syntax">
+                <span class="type-string" data-bind="text: strQ"></span>.split( <span class="type-regexp" data-bind="text: regexp"></span> );
+            </div>
+            <ol class="result" start="0" data-bind="foreach: splitResult">
+                <li class="type-string" data-bind="text: $data"></li>
+            </ol>
+            <div class="regexp-error" data-bind="text: error"></div>
+        </code>
+
+        <div data-role="collapsible" data-content-theme="d">
+            <h3>Reference</h3>
+            <h4>Summary</h4>
+            <p>Splits a String object into an array of strings by separating the string into substrings.
+            (Implemented in JavaScript 1.1, ECMAScript Edition ECMAScript 3rd Edition).</p>
+            <h4>Syntax</h4>
+            <code>var result = string.split( separator[, limit] );</code>
+            <h5>separator</h5>
+            <p>Specifies the character to use for separating the string. In this app the separator is always a string
+                but in code you can provide a string instead. If separator is omitted, the array returned contains one
+                element consisting of the entire string.</p>
+            <h5>limit</h5>
+            <p>(optional parameter) An integer specifying a limit on the number of splits to be found.
+                The split method still splits on every match of separator, but if necessary it truncates the last elements
+                of the resulting array to contain at a maximum of <code>limit</code> elements.</p>
+            <h4>Description</h4>
+            <p>The split method returns the new array.</p>
+            <p>When found, separator is removed from the string and the substrings are returned in an array.</p>
+            <p>If separator is a regular expression that contains capturing parentheses, then each time separator is
+                matched the results (including any undefined results) of the capturing parentheses are spliced into
+                the output array. However, not all browsers support this capability.</p>
+            <p>When the string is empty, split returns an array containing one empty string, rather than an empty array.</p>
+            <p>The <code>separator</code> parameter is optional but this behavior is not supported in this app.
+            If separator is omitted, the array contains one element consisting of the entire string.</p>
+        </div>
+
+    </div>
+
+    <div data-theme="d" data-role="footer" data-position="fixed">
+        <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+    </div>
+</div>
+
+<div data-role="page" id="settings-page">
+    <div data-theme="b" data-role="header" data-add-back-btn="true">
+        <a href="#" onclick="window.history.back()" data-transition="fade" data-theme="" data-icon="back">Back</a>
+        <h3>Settings</h3>
+    </div>
+    <div data-role="content">
         <code class="type-regexp" data-bind="text: regexp"></code>
         <fieldset data-role="controlgroup" data-type="horizontal">
             <input id="g-checkbox" type="checkbox" data-bind="checked: gFlag"><label for="g-checkbox">global</label>
             <input id="i-checkbox" type="checkbox" data-bind="checked: iFlag"><label for="i-checkbox">ignoreCase</label>
             <input id="m-checkbox" type="checkbox" data-bind="checked: mFlag"><label for="m-checkbox">multiline</label>
         </fieldset>
-        <label for="string-txt">String</label>
-        <textarea cols="40" rows="8" id="string-txt" data-bind="value: str, valueUpdate: 'keyup'"></textarea>
+    </div>
 
+    <div data-theme="d" data-role="footer" data-position="fixed">
+        <h3><a href="#reference-page" data-transition="fade">Syntax Guide</a></h3>
+    </div>
+</div>
+
+<div data-role="page" id="reference-page">
+    <div data-theme="b" data-role="header" data-add-back-btn="true">
+        <a href="#" onclick="window.history.back()" data-transition="fade" data-icon="back">Back</a>
+        <h3>Regular Expressions Reference</h3>
+    </div>
+    <div data-role="content">
         <div data-role="collapsible-set" data-theme="c" data-content-theme="d">
 
-            <div data-role="collapsible" data-collapsed="false">
-                <h3>match()</h3>
-                <code>
-                    <div class="call-syntax">
-                        <span class="type-string" data-bind="text: strQ"></span>.match( <span class="type-regexp" data-bind="text: regexp"></span> );
-                    </div>
-                    <ol class="result" start="0" data-bind="foreach: matchResult">
-                        <li class="type-string" data-bind="text: $data"></li>
-                    </ol>
-                </code>
+            <div data-role="collapsible">
+                <h3>\</h3>
+                <p>For characters that are usually treated literally, indicates that the next character is special and not to be interpreted literally.</p>
+                <p>For example, <code>/b/</code> matches the character 'b'. By placing a backslash in front of b, that is by using <code>/\b/</code>, the character becomes special to mean match a word boundary.</p>
+                <p><em>or</em></p>
+                <p>For characters that are usually treated specially, indicates that the next character is not special and should be interpreted literally.</p>
+                <p>For example, * is a special character that means 0 or more occurrences of the preceding character should be matched; for example, <code>/a*/</code> means match 0 or more "a"s. To match <code>*</code> literally, precede it with a backslash; for example, <code>/a\*/</code> matches 'a*'.</p>
             </div>
 
             <div data-role="collapsible">
-                <h3>replace()</h3>
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="replace-str-txt">Replace With</label>
-                        <textarea id="replace-str-txt" data-bind="value: replaceStr, valueUpdate: 'keyup'"></textarea>
-                    </fieldset>
-                </div>
-                <code>
-                    <div class="call-syntax">
-                        <span class="type-string" data-bind="text: strQ"></span>.replace( <span class="type-regexp" data-bind="text: regexp"></span>, <span class="type-string" data-bind="text: replaceStrQ"></span> );
-                    </div>
-                    <pre class="type-string result" data-bind="text: replaceResult"></pre>
-                </code>
+                <h3>^</h3>
+                <p>Matches beginning of input. If the multiline flag is set to true, also matches immediately after a line break character.</p>
+                <p>For example, <code>/^A/</code> does not match the 'A' in "an A", but does match the first 'A' in "An A."</p>
             </div>
 
             <div data-role="collapsible">
-                <h3>exec()</h3>
-                <code>
-                    <div class="call-syntax">
-                        <span class="type-regexp" data-bind="text: regexp"></span>.exec( <span class="type-string" data-bind="text: strQ"></span> );
-                    </div>
-                    <ol class="result" start="0" data-bind="foreach: execResult">
-                        <li class="type-string" data-bind="text: $data"></li>
-                    </ol>
-                </code>
+                <h3>$</h3>
+                <p>Matches end of input. If the multiline flag is set to true, also matches immediately before a line break character.</p>
+                <p>For example, <code>/t$/</code> does not match the 't' in "eater", but does match it in "eat".</p>
             </div>
 
             <div data-role="collapsible">
-                <h3>test()</h3>
-                <code>
-                    <div class="call-syntax">
-                        <span class="type-regexp" data-bind="text: regexp"></span>.test( <span class="type-string" data-bind="text: strQ"></span> );
-                    </div>
-                    <div class="type-boolean result" data-bind="text: testResult"></div>
-                </code>
+                <h3>*</h3>
+                <p>Matches the preceding item 0 or more times.</p>
+                <p>For example, <code>/bo*/</code> matches 'boooo' in "A ghost booooed" and 'b' in "A bird warbled", but nothing in "A goat grunted".</p>
             </div>
 
             <div data-role="collapsible">
-                <h3>search()</h3>
-                <code>
-                    <div class="call-syntax">
-                        <span class="type-regexp" data-bind="text: regexp"></span>.search( <span class="type-string" data-bind="text: strQ"></span> );
-                    </div>
-                    <div class="type-number result" data-bind="text: searchResult"></div>
-                </code>
+                <h3>+</h3>
+                <p>Matches the preceding item 1 or more times. Equivalent to <code>{1,}</code>.</p>
+                <p>For example, <code>/a+/</code> matches the 'a' in "candy" and all the a's in "caaaaaaandy".</p>
             </div>
 
             <div data-role="collapsible">
-                <h3>split()</h3>
-                <code>
-                    <div class="call-syntax">
-                        <span class="type-string" data-bind="text: strQ"></span>.split( <span class="type-regexp" data-bind="text: regexp"></span> );
-                    </div>
-                    <ol class="result" start="0" data-bind="foreach: splitResult">
-                        <li class="type-string" data-bind="text: $data"></li>
-                    </ol>
-                </code>
+                <h3>*? +?</h3>
+                <p>Matches like <code>*</code> and <code>+</code> from above, however the match is the smallest possible match.</p>
+                <p>For example, <code>/".*?"/</code> matches '"foo"' in '"foo" "bar"' and does not match '"foo" "bar"' as without the <code>?</code> behind the <code>*</code>.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>?</h3>
+                <p>Matches the preceding item 0 or 1 time.</p>
+                <p>For example, <code>/e?le?/</code> matches the 'el' in "angel" and the 'le' in "angle."</p>
+                <p>If used immediately after any of the quantifiers <code>*</code>, <code>+</code>, <code>?</code>, or <code>{}</code>, makes the quantifier non-greedy (matching the minimum number of times), as opposed to the default, which is greedy (matching the maximum number of times).</p>
+                <p>Also used in lookahead assertions, described under <code>(?=)</code>, <code>(?!)</code>, and <code>(?:)</code> in this table.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>.</h3>
+                <p>(The decimal point) matches any single character except the newline characters: \n \r \u2028 or \u2029. (The character set <code>[^]</code> can be used to match any character including newlines.)</p>
+                <p>For example, <code>/.n/</code> matches 'an' and 'on' in "nay, an apple is on the tree", but not 'nay'.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>(<em>x</em>)</h3>
+                <p>Matches <code><em>x</em></code> and remembers the match. These are called capturing parentheses.</p>
+                <p>For example, <code>/(foo)/</code> matches and remembers 'foo' in "foo bar." The matched substring can be recalled from the resulting array's elements <code>[1], ..., [n]</code> or from the predefined <code>RegExp</code> object's properties <code>$1, ..., $9</code>.</p>
+                <p>Capturing groups have a performance penalty. If you don't need the matched substring to be recalled, prefer non-capturing parentheses (see below).</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>(?:<em>x</em>)</h3>
+                <p>Matches <code><em>x</em></code> but does not remember the match. These are called non-capturing parentheses.
+                    The matched substring can not be recalled from the resulting array's elements
+                    <code>[1], ..., [n]</code> or from the predefined <code>RegExp</code> object's properties
+                    <code>$1, ..., $9</code>.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3><em>x</em>(?=<em>y</em>)</h3>
+                <p>Matches <code><em>x</em></code> only if <code><em>x</em></code> is followed by <code><em>y</em></code>.
+                    For example, <code>/Jack(?=Sprat)/</code> matches 'Jack' only if it is followed by 'Sprat'.
+                    <code>/Jack(?=Sprat|Frost)/</code> matches 'Jack' only if it is followed by 'Sprat' or 'Frost'.
+                    However, neither 'Sprat' nor 'Frost' is part of the match results.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3><em>x</em>(?!<em>y</em>)</h3>
+                <p>Matches <code><em>x</em></code> only if <code><em>x</em></code> is not followed by <code><em>y</em></code>. For example, <code>/\d+(?!\.)/</code> matches a number only if it is not followed by a decimal point.</p>
+                <p><code>/\d+(?!\.)/.exec("3.141")</code> matches 141 but not 3.141.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3><em>x</em>|<em>y</em></h3>
+                <p>Matches either <code><em>x</em></code> or <code><em>y</em></code>.</p>
+                <p>For example, <code>/green|red/</code> matches 'green' in "green apple" and 'red' in "red apple."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>{<em>n</em>}</h3>
+                <p>Where <code><em>n</em></code> is a positive integer. Matches exactly <code><em>n</em></code> occurrences of the preceding item.</p>
+                <p>For example, <code>/a{2}/</code> doesn't match the 'a' in "candy," but it matches all of the a's in "caandy," and the first two a's in "caaandy."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>{<em>n</em>,}</h3>
+                <p>Where <code><em>n</em></code> is a positive integer. Matches at least <code><em>n</em></code> occurrences of the preceding item.</p>
+                <p>For example, <code>/a{2,}/</code> doesn't match the 'a' in "candy", but matches all of the a's in "caandy" and in "caaaaaaandy."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>{<em>n</em>,<em>m</em>}</h3>
+                <p>Where <code><em>n</em></code> and <code><em>m</em></code> are positive integers. Matches at least <code><em>n</em></code> and at most <code><em>m</em></code> occurrences of the preceding item.</p>
+                <p>For example, <code>/a{1,3}/</code> matches nothing in "cndy", the 'a' in "candy," the first two a's in "caandy," and the first three a's in "caaaaaaandy". Notice that when matching "caaaaaaandy", the match is "aaa", even though the original string had more a's in it.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>[xyz]</h3>
+                <p>A character set. Matches any one of the enclosed characters. You can specify a range of characters by using a hyphen.</p>
+                <p>For example, <code>[abcd]</code> is the same as <code>[a-d]</code>. They match the 'b' in "brisket" and the 'c' in "chop".</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>[^xyz]</h3>
+                <p>A negated or complemented character set. That is, it matches anything that is not enclosed in the brackets. You can specify a range of characters by using a hyphen.</p>
+                <p>For example, <code>[^abc]</code> is the same as <code>[^a-c]</code>. They initially match 'o' in "bacon" and 'h' in "chop."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>[\b]</h3>
+                <p>Matches a backspace. (Not to be confused with <code>\b</code>)</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\b</h3>
+                <p>Matches a zero-width word boundary, such as between a letter and a space. (Not to be confused with <code>[\b]</code>)</p>
+                <p>For example, <code>/\bno/</code> matches the 'no' in "at noon"; <code>/ly\b/</code> matches the 'ly' in "possibly yesterday."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\B</h3>
+                <p>Matches a zero-width non-word boundary, such as between two letters or between two spaces.</p>
+                <p>For example, <code>/\Bon/</code> matches 'on' in "at noon", and <code>/ye\B/</code> matches 'ye' in "possibly yesterday."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\c<em>X</em></h3>
+                <p>Where <code><em>X</em></code> is a letter from A - Z. Matches a control character in a string.</p>
+                <p>For example, <code>/\cM/</code> matches control-M in a string.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\d</h3>
+                <p>Matches a digit character in the basic Latin alphabet. Equivalent to <code>[0-9]</code>.</p>
+                <p><strong>Note</strong>: In Firefox 2 and earlier, matches a digit character from any alphabet.</p>
+                <p>For example, <code>/\d/</code> or <code>/[0-9]/</code> matches '2' in "B2 is the suite number."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\D</h3>
+                <p>Matches any character that is not a digit in the basic Latin alphabet. Equivalent to <code>[^0-9]</code>.</p>
+                <p><strong>Note</strong>: In Firefox 2 and earlier, excludes digit characters from all alphabets.</p>
+                <p>For example, <code>/\D/</code> or <code>/[^0-9]/</code> matches 'B' in "B2 is the suite number."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\f</h3>
+                <p>Matches a form-feed.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\n</h3>
+                <p>Matches a linefeed.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\r</h3>
+                <p>Matches a carriage return.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\s</h3>
+                <p>Matches a single white space character, including space, tab, form feed, line feed and other unicode spaces. Equivalent to [ \t\r\n].</p>
+                <p>For example, <code>/\s\w*/</code> matches ' bar' in "foo bar."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\S</h3>
+                <p>Matches a single character other than white space (Not whitespace). Equivalent to <code>[</code><code>^</code> \t\r\n<code>]</code>.</p>
+                <p>For example, <code>/\S\w*/</code> matches 'foo' in "foo bar."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\t</h3>
+                <p>Matches a tab.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\v</h3>
+                <p>Matches a vertical tab.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\w</h3>
+                <p>Matches any alphanumeric character from the basic Latin alphabet, including the underscore. Equivalent to <code>[A-Za-z0-9_]</code>.</p>
+                <p>For example, <code>/\w/</code> matches 'a' in "apple," '5' in "$5.28," and '3' in "3D."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\W</h3>
+                <p>Matches any character that is not a word character from the basic Latin alphabet. Equivalent to <code>[^A-Za-z0-9_]</code>.</p>
+                <p>For example, <code>/\W/</code> or <code>/[^A-Za-z0-9_]/</code> matches '%' in "50%."</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\<em>n</em></h3>
+                <p>Where <code><em>n</em></code> is a positive integer. A back reference to the last substring matching the n parenthetical in the regular expression (counting left parentheses).</p>
+                <p>For example, <code>/apple(,)\sorange\1/</code> matches 'apple, orange,' in "apple, orange, cherry, peach." A more complete example follows this table.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\0</h3>
+                <p>Matches a NUL character. Do not follow this with another digit.</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\x<em>hh</em></h3>
+                <p>Matches the character with the code <code><em>hh</em></code> (two hexadecimal digits)</p>
+            </div>
+
+            <div data-role="collapsible">
+                <h3>\u<em>hhhh</em></h3>
+                <p>Matches the character with the Unicode value <code><em>hhhh</em></code> (four hexadecimal digits).</p>
             </div>
 
         </div>
     </div>
-
 </div>
+
 </body>
 </html>

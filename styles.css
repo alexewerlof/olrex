@@ -9,6 +9,10 @@ ol li:before {
     content: '[' counter(o-counter) '] = ';
     counter-increment: o-counter;
 }
+code {
+    font-size: 1.2em;
+    color:darkblue;
+}
 .result {
     margin: 13px 0;
 }
